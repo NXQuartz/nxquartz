@@ -1,0 +1,3 @@
+[submodule "vendor/Plutonium"]
+	path = vendor/Plutonium
+	url = https://github.com/XorTroll/Plutonium.git

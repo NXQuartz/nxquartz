@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "plutonium": "cpp",
+        "chrono": "cpp",
+        "string": "cpp"
+    }
+}
