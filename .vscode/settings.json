@@ -2,6 +2,7 @@
     "files.associations": {
         "plutonium": "cpp",
         "chrono": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "functional": "cpp"
     }
 }
