@@ -226,6 +226,15 @@ clean:
 	@rm -fr $(BUILD) $(OUTDIR) $(ROMFS_FOLDERS)
 
 #---------------------------------------------------------------------------------
+ifeq ($(RYUJINX),)
+run:
+	$(error RYUJINX environment variable not set. This should point to the ryujinx executable on your system)
+else
+run:
+	@$(RYUJINX) $(OUTPUT).nro
+endif
+
+#---------------------------------------------------------------------------------
 else
 .PHONY:	all
 
