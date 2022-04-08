@@ -3,22 +3,32 @@
         {
             "name": "DKP aarch64",
             "includePath": [
+                // Actual application headers
+                "${workspaceFolder}/include",
+
+                // devkitPro headers
                 "${env:DEVKITPRO_PATH}/devkitA64/aarch64-none-elf/include",
                 "${env:DEVKITPRO_PATH}/devkitA64/lib/gcc/aarch64-none-elf/11.2.0/include",
                 "${env:DEVKITPRO_PATH}/libnx/include",
                 "${env:DEVKITPRO_PATH}/portlibs/switch/include",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/vendor/Plutonium/Plutonium/include"
+
+                // Borealis & dependency headers
+                "${workspaceFolder}/vendor/borealis/library/include",
+                "${workspaceFolder}/vendor/borealis/library/include/borealis/extern/**",
+                "${workspaceFolder}/vendor/borealis/library/lib/extern/yoga/src",
+                "${workspaceFolder}/vendor/borealis/library/lib/extern/tweeny/include",
+                "${workspaceFolder}/vendor/borealis/library/lib/extern/fmt/include",
+                "${workspaceFolder}/vendor/borealis/library/lib/extern/libretro-common"
             ],
             "defines": [
                 "SWITCH",
                 "__SWITCH__",
                 "DEBUG"
             ],
-            "compilerPath": "${env:DEVKITPRO_PATH}/devkitA64/bin/aarch64-none-elf-g++",
+            "compilerPath": "${env:DEVKITPRO_PATH}/devkitA64/bin/aarch64-none-elf-gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-x64",
+            "intelliSenseMode": "linux-gcc-arm",
             "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],

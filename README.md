@@ -1,9 +1,5 @@
-<p align="center">
-	<img width="550" src="https://raw.githubusercontent.com/NXQuartz/NXQuartz/master/.github/assets/banner.png"><br>
-</p>
-
 # NXQuartz
-NXQuartz is a cloud save backup application for the Nintendo Switch, created with [libnx](https://github.com/switchbrew/libnx) and [Plutonium](https://github.com/XorTroll/Plutonium)
+NXQuartz is a cloud save backup application for the Nintendo Switch, created with [libnx](https://github.com/switchbrew/libnx)
 
 ## Development Guide
 Make sure you have [DevKitA64](https://devkitpro.org/) installed. Installations can be found on their website.

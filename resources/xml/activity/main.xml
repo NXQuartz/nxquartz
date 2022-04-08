@@ -1,0 +1,70 @@
+<brls:TabFrame
+    title="@i18n/lang/title"
+    iconInterpolation="linear"
+    icon="@res/img/quartz_96.png">
+
+    <!-- Static tab with inline XML -->
+    <brls:Tab label="@i18n/lang/tabs/about" >
+        <brls:Box
+            width="auto"
+            height="auto"
+            axis="column"
+            paddingTop="50"
+            paddingBottom="50"
+            paddingLeft="75"
+            paddingRight="75">
+
+            <brls:Image
+                width="auto"
+                height="33%"
+                image="@res/img/quartz_256.png"
+                marginBottom="50"/>
+
+            <brls:Box
+                width="auto"
+                height="auto"
+                axis="row"
+                marginBottom="50">
+
+                <brls:Label
+                    width="40%"
+                    height="auto"
+                    text="@i18n/lang/about/title"
+                    fontSize="36"
+                    horizontalAlign="right"
+                    verticalAlign="top"
+                    marginLeft="-20.0"/>
+
+                <brls:Label
+                    width="auto"
+                    height="auto"
+                    text="@i18n/lang/about/description"
+                    marginLeft="50"/>
+            </brls:Box>
+
+            <brls:Box
+                width="auto"
+                height="auto"
+                axis="column"
+                alignItems="center"
+                justifyContent="spaceEvenly"
+                grow="1.0" >
+
+                <brls:Label
+                    width="auto"
+                    height="auto"
+                    text="@i18n/lang/about/github"/>
+
+                <brls:Label
+                    width="auto"
+                    height="auto"
+                    text="@i18n/lang/about/licence"/>
+
+                <brls:Label
+                    width="auto"
+                    height="auto"
+                    text="@i18n/lang/about/made_by"/>
+            </brls:Box>
+        </brls:Box>
+    </brls:Tab>
+</brls:TabFrame>

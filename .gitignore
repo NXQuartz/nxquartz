@@ -31,9 +31,15 @@
 *.out
 *.app
 *.nro
-*.log
+
+# Shaders compiled on build and shipped with program, shouldn't be uploaded
+resources/shaders
 
 # Build outputs
 build
 out
-NXQuartz.lst
+Quartz.lst
+
+# VSCode
+.vscode/*.log
+.vscode/settings.json

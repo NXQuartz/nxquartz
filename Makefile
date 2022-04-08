@@ -34,18 +34,24 @@ VERSION_MAJOR := 1
 VERSION_MINOR := 0
 VERSION_MICRO := 0
 
-APP_TITLE	:=	NXQuartz
+APP_TITLE	:=	Quartz
 APP_AUTHOR	:=	JSH32
 APP_VERSION	:=	${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_MICRO}
 
 TARGET		:=	$(subst $e ,_,$(notdir $(APP_TITLE)))
-OUTDIR		:=	out
-BUILD		:=	build
-SOURCES		:=	source source/ui source/ui/layout source/hos
+ICON		:=	resources/img/icon.jpg
+SOURCES		:=	source source/ui
 DATA		:=	data
 INCLUDES	:=	include
+OUTDIR		:=  out
+BUILD		:=	build
 EXEFS_SRC	:=	exefs_src
-#ROMFS	:=	romfs
+
+
+OUT_SHADERS	:=	shaders
+
+ROMFS	    	:=	resources
+BOREALIS_PATH	:=	vendor/borealis
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -60,18 +66,20 @@ CFLAGS	:=	-g -Wall -O3 -ffunction-sections \
 
 CFLAGS	+=	$(INCLUDE) -D__SWITCH__
 
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++17
+CXXFLAGS	:= $(CFLAGS) -std=c++1z -O2 -Wno-volatile
 
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-no-as-needed,-Map,$(notdir $*.map)
 
-LIBS	:= -lpu -lfreetype -lSDL2_mixer -lopusfile -lopus -lmodplug -lmpg123 -lvorbisidec -logg -lSDL2_ttf -lSDL2_gfx -lSDL2_image -lSDL2 -lEGL -lGLESv2 -lglapi -ldrm_nouveau -lwebp -lpng -ljpeg `sdl2-config --libs` `freetype-config --libs` -lnx
+LIBS	:= -lnx
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(CURDIR)/vendor/Plutonium/Plutonium
+LIBDIRS	:= $(PORTLIBS) $(LIBNX)
+
+include $(TOPDIR)/vendor/borealis/library/borealis.mk
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -91,6 +99,7 @@ export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
+GLSLFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.glsl)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
 
 #---------------------------------------------------------------------------------
@@ -109,8 +118,20 @@ endif
 
 export OFILES_BIN	:=	$(addsuffix .o,$(BINFILES))
 export OFILES_SRC	:=	$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
-export OFILES 	:=	$(OFILES_BIN) $(OFILES_SRC)
+export OFILES 		:=	$(OFILES_BIN) $(OFILES_SRC)
 export HFILES_BIN	:=	$(addsuffix .h,$(subst .,_,$(BINFILES)))
+
+ifneq ($(strip $(ROMFS)),)
+	ROMFS_TARGETS :=
+	ROMFS_FOLDERS :=
+	ifneq ($(strip $(OUT_SHADERS)),)
+		ROMFS_SHADERS := $(ROMFS)/$(OUT_SHADERS)
+		ROMFS_TARGETS += $(patsubst %.glsl, $(ROMFS_SHADERS)/%.dksh, $(GLSLFILES))
+		ROMFS_FOLDERS += $(ROMFS_SHADERS)
+	endif
+
+	export ROMFS_DEPS := $(foreach file,$(ROMFS_TARGETS),$(CURDIR)/$(file))
+endif
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
@@ -118,7 +139,18 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-export BUILD_EXEFS_SRC := $(TOPDIR)/$(EXEFS_SRC)
+ifeq ($(strip $(CONFIG_JSON)),)
+	jsons := $(wildcard *.json)
+	ifneq (,$(findstring $(TARGET).json,$(jsons)))
+		export APP_JSON := $(TOPDIR)/$(TARGET).json
+	else
+		ifneq (,$(findstring config.json,$(jsons)))
+			export APP_JSON := $(TOPDIR)/config.json
+		endif
+	endif
+else
+	export APP_JSON := $(TOPDIR)/$(CONFIG_JSON)
+endif
 
 ifeq ($(strip $(ICON)),)
 	icons := $(wildcard *.jpg)
@@ -149,19 +181,49 @@ ifneq ($(ROMFS),)
 	export NROFLAGS += --romfsdir=$(CURDIR)/$(ROMFS)
 endif
 
-.PHONY: $(BUILD) clean all run
+.PHONY: clean all
 
 #---------------------------------------------------------------------------------
-all: $(BUILD)
+all: $(ROMFS_TARGETS) |
+	@mkdir -p $(OUTDIR) $(BUILD)
+	@MSYS2_ARG_CONV_EXCL="-D;$(MSYS2_ARG_CONV_EXCL)" $(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
-$(BUILD):
-	@[ -d $@ ] || mkdir -p $@ $(BUILD) $(OUTDIR)
-	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+ifneq ($(strip $(ROMFS_TARGETS)),)
 
+$(ROMFS_TARGETS): | $(ROMFS_FOLDERS)
+
+$(ROMFS_FOLDERS):
+	@mkdir -p $@
+
+$(ROMFS_SHADERS)/%_vsh.dksh: %_vsh.glsl
+	@echo {vert} $(notdir $<)
+	@uam -s vert -o $@ $<
+
+$(ROMFS_SHADERS)/%_tcsh.dksh: %_tcsh.glsl
+	@echo {tess_ctrl} $(notdir $<)
+	@uam -s tess_ctrl -o $@ $<
+
+$(ROMFS_SHADERS)/%_tesh.dksh: %_tesh.glsl
+	@echo {tess_eval} $(notdir $<)
+	@uam -s tess_eval -o $@ $<
+
+$(ROMFS_SHADERS)/%_gsh.dksh: %_gsh.glsl
+	@echo {geom} $(notdir $<)
+	@uam -s geom -o $@ $<
+
+$(ROMFS_SHADERS)/%_fsh.dksh: %_fsh.glsl
+	@echo {frag} $(notdir $<)
+	@uam -s frag -o $@ $<
+
+$(ROMFS_SHADERS)/%.dksh: %.glsl
+	@echo {comp} $(notdir $<)
+	@uam -s comp -o $@ $<
+
+endif
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(OUTDIR)
+	@rm -fr $(BUILD) $(OUTDIR) $(ROMFS_FOLDERS)
 
 #---------------------------------------------------------------------------------
 else
@@ -179,9 +241,9 @@ $(OUTPUT).pfs0	:	$(OUTPUT).nso
 $(OUTPUT).nso	:	$(OUTPUT).elf
 
 ifeq ($(strip $(NO_NACP)),)
-$(OUTPUT).nro	:	$(OUTPUT).elf $(OUTPUT).nacp
+$(OUTPUT).nro	:	$(OUTPUT).elf $(OUTPUT).nacp $(ROMFS_DEPS)
 else
-$(OUTPUT).nro	:	$(OUTPUT).elf
+$(OUTPUT).nro	:	$(OUTPUT).elf $(ROMFS_DEPS)
 endif
 
 $(OUTPUT).elf	:	$(OFILES)
