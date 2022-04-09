@@ -6,5 +6,6 @@
         "functional": "cpp",
         "string_view": "cpp",
         "new": "cpp"
-    }
+    },
+    "workbench.colorTheme": "Syntax Material Dark Level 1 (beta)"
 }
