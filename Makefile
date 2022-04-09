@@ -52,6 +52,7 @@ OUT_SHADERS	:=	shaders
 
 ROMFS	    	:=	resources
 BOREALIS_PATH	:=	vendor/borealis
+BOREALIS_RESOURCES := romfs:/
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -62,7 +63,8 @@ CFLAGS	:=	-g -Wall -O3 -ffunction-sections \
 			$(ARCH) $(DEFINES) \
 			-DVERSION_MAJOR=${VERSION_MAJOR} \
 			-DVERSION_MINOR=${VERSION_MINOR} \
-			-DVERSION_MICRO=${VERSION_MICRO}
+			-DVERSION_MICRO=${VERSION_MICRO} \
+			-DBOREALIS_RESOURCES="\"$(BOREALIS_RESOURCES)\""
 
 CFLAGS	+=	$(INCLUDE) -D__SWITCH__
 

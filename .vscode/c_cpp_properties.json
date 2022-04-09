@@ -15,15 +15,14 @@
                 // Borealis & dependency headers
                 "${workspaceFolder}/vendor/borealis/library/include",
                 "${workspaceFolder}/vendor/borealis/library/include/borealis/extern/**",
-                "${workspaceFolder}/vendor/borealis/library/lib/extern/yoga/src",
-                "${workspaceFolder}/vendor/borealis/library/lib/extern/tweeny/include",
                 "${workspaceFolder}/vendor/borealis/library/lib/extern/fmt/include",
                 "${workspaceFolder}/vendor/borealis/library/lib/extern/libretro-common"
             ],
             "defines": [
                 "SWITCH",
                 "__SWITCH__",
-                "DEBUG"
+                "DEBUG",
+                "BOREALIS_RESOURCES=\"romfs:/\""
             ],
             "compilerPath": "${env:DEVKITPRO_PATH}/devkitA64/bin/aarch64-none-elf-gcc",
             "cStandard": "c11",

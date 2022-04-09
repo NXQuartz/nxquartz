@@ -5,35 +5,32 @@
 #include <borealis.hpp>
 #include <string>
 
-// #include "captioned_image.hpp"
-// #include "components_tab.hpp"
-#include "ui/main_activity.hpp"
-// #include "recycling_list_tab.hpp"
+#include "ui/about_tab.hpp"
 
-using namespace brls::literals;
+namespace i18n = brls::i18n;
+using namespace i18n::literals;
 
 int main(int argc, char* argv[]) {
-    // Set log level
-    // We recommend to use INFO for real apps
     brls::Logger::setLogLevel(brls::LogLevel::DBG);
+    i18n::loadTranslations();
 
     // Init the app and i18n
-    if (!brls::Application::init()) {
+    if (!brls::Application::init("main/name"_i18n)) {
         brls::Logger::error("Unable to init Borealis application");
         return EXIT_FAILURE;
     }
 
-    brls::Application::createWindow("lang/title"_i18n);
+    // Main window and page
+    brls::TabFrame* rootFrame = new brls::TabFrame();
+    rootFrame->setTitle("main/name"_i18n);
+    rootFrame->setIcon(BOREALIS_ASSET("img/quartz_256.png"));
 
-    // Have the application register an action on every activity that will quit when you press BUTTON_START
-    brls::Application::setGlobalQuit(true);
+    rootFrame->addTab("main/tabs/about"_i18n, new ui::AboutTab());
 
-    // Create and push the main activity to the stack
-    brls::Application::pushActivity(new ui::MainActivity());
+    brls::Application::pushView(rootFrame);
 
     // Run the app
     while (brls::Application::mainLoop());
 
-    // Exit
     return EXIT_SUCCESS;
 }

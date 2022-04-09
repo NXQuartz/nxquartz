@@ -1,0 +1,12 @@
+{
+    "name": "Quartz",
+    "tabs": {
+        "about": "About Quartz"
+    },
+    "about": {
+        "description": "A cloud based save manager and backup tool for the Nintendo Switch (libnx).",
+        "github": "Find it on github.com/NXQuartz/nxquartz",
+        "license": "Quartz is licensed under GPL3",
+        "made_by": "Made with ♥ by JSH32"
+    }
+}
