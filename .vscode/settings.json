@@ -38,7 +38,13 @@
         "type_traits": "cpp",
         "tuple": "cpp",
         "typeinfo": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "ctime": "cpp",
+        "ratio": "cpp",
+        "atomic": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     },
     "workbench.colorTheme": "Syntax Material Dark Level 1 (beta)"
 }

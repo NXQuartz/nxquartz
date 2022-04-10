@@ -1,9 +1,12 @@
 #include "account.hpp"
 
 #include <unordered_map>
+#include <chrono>
+#include <thread>
 
 namespace account {
     static std::unordered_map<AccountUid, const SwitchAccount*> accountMap;
+    static auto lastSelected = std::chrono::steady_clock::now();
 
     Result initAccountService() {
         return accountInitialize(AccountServiceType_Administrator);
@@ -44,11 +47,19 @@ namespace account {
     }
 
     const SwitchAccount* SwitchAccount::selectAccount() {
+        // Account select applet might still be open after call.
+        // If applet still open atmosphere will crash so we wait 1 second to make sure it closed.
+        using namespace std::chrono;
+        if (duration_cast<milliseconds>(steady_clock::now() - lastSelected).count() < 1000)
+            std::this_thread::sleep_for(seconds(1));
+
         const PselUserSelectionSettings selectionCfg = {};
         AccountUid outUid;
 
-        if (R_SUCCEEDED(pselShowUserSelector(&outUid, &selectionCfg)))
+        if (R_SUCCEEDED(pselShowUserSelector(&outUid, &selectionCfg))) {
+            lastSelected = std::chrono::steady_clock::now();
             return SwitchAccount::fromId(outUid);
+        }
 
         return nullptr;
     }
