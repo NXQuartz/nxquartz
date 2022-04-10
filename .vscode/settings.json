@@ -44,7 +44,17 @@
         "atomic": "cpp",
         "semaphore": "cpp",
         "stop_token": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "format": "cpp",
+        "codecvt": "cpp",
+        "cstddef": "cpp",
+        "forward_list": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "istream": "cpp",
+        "numeric": "cpp",
+        "sstream": "cpp",
+        "valarray": "cpp"
     },
     "workbench.colorTheme": "Syntax Material Dark Level 1 (beta)"
 }

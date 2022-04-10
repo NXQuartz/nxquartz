@@ -39,6 +39,7 @@ namespace account {
     public:
         const AccountUid id;
         const std::string name;
+        const std::pair<unsigned char*, size_t> icon;
 
         /**
          * @brief Gets an account by their Uid.
@@ -46,28 +47,36 @@ namespace account {
          * @param uid the uid of the user
          * @return a SwitchAccount* or nullptr if the user was not found
          */
-        static const SwitchAccount* fromId(AccountUid uid);
+        static SwitchAccount* fromId(AccountUid uid);
 
         /**
          * @brief Opens selection dialogue on the switch for user to select.
          * 
          * @return SwitchAccount* or nullptr if cancelled
          */
-        static const SwitchAccount* selectAccount();
+        static SwitchAccount* selectAccount();
 
         /**
          * @brief Get the registered user accounts
          * 
          * @return all user accounts 
          */
-        static const std::vector<const SwitchAccount*> getAll();
+        static const std::vector<SwitchAccount*> getAll();
 
         /**
-         * @brief Retrieve the users icon as a heap allocated image pointer.
-         * Do not call this unless you are adding it to another brls view, otherwise you may have memory leaks.
+         * @brief Get currently selected account.
+         * This will return the first found user if no profile was set
          * 
-         * @return brls::Image* 
+         * @return current account
          */
-        brls::Image* createIcon();
+        static SwitchAccount* getCurrentAccount();
+
+        /**
+         * @brief Set the current account object.
+         * 
+         * @param uid user identifier
+         * @return account found
+         */
+        static bool setCurrentAccount(AccountUid uid); 
     };
 }

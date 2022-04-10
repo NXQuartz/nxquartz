@@ -11,6 +11,7 @@
         "made_by": "Made with ♥ by JSH32"
     },
     "account": {
-        "select_profile": "Select Profile"
+        "select_profile": "Current Profile:",
+        "select_profile_tooltip": "The currently selected user profile on the console.\nAll saves will be saved and restored to this profile."
     }
 }
