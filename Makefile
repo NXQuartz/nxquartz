@@ -40,7 +40,7 @@ APP_VERSION	:=	${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_MICRO}
 
 TARGET		:=	$(subst $e ,_,$(notdir $(APP_TITLE)))
 ICON		:=	resources/img/icon.jpg
-SOURCES		:=	source source/ui
+SOURCES		:=	source source/ui source/ui/components source/state
 DATA		:=	data
 INCLUDES	:=	include
 OUTDIR		:=  out

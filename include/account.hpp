@@ -10,8 +10,8 @@
 namespace std {
     template <>
     struct hash<AccountUid> {
-        size_t operator() (const AccountUid& a) const { 
-            return ((hash<u64>()(a.uid[0]) ^ (hash<u64>()(a.uid[1]) << 1)) >> 1); 
+        size_t operator() (const AccountUid& a) const {
+            return ((hash<u64>()(a.uid[0]) ^ (hash<u64>()(a.uid[1]) << 1)) >> 1);
         }
     };
 }

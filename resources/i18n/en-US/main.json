@@ -12,6 +12,11 @@
     },
     "account": {
         "select_profile": "Current Profile:",
-        "select_profile_tooltip": "The currently selected user profile on the console.\nAll saves will be saved and restored to this profile."
+        "select_profile_tooltip": "The currently selected user profile on the console.\nAll saves will be saved and restored to this profile.",
+        "atlas": {
+            "header": "Atlas Account Settings",
+            "sign_in": "Sign in",
+            "sign_out": "Sign out"
+        }
     }
 }

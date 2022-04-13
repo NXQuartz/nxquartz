@@ -27,7 +27,7 @@
             "compilerPath": "${env:DEVKITPRO_PATH}/devkitA64/bin/aarch64-none-elf-gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-arm",
+            "intelliSenseMode": "linux-gcc-arm64",
             "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],

@@ -1,18 +1,47 @@
 #include "ui/account_tab.hpp"
+#include "ui/components/bar.hpp"
 #include "account.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
 
 namespace ui {
-    AccountTab::AccountTab() {
+    AccountTab::AccountTab(AccountState* state) : StateListener(state) {
         addProfileSelector();
+        addAtlasAccountData();
+    }
+
+    void AccountTab::onStateUpdate(const AccountState* state) {
+        if (!state->loggedIn) {
+            signButton->setLabel("main/account/atlas/sign_in"_i18n);
+        } else {
+            signButton->setLabel("main/account/atlas/sign_out"_i18n);
+        }
+
+        // signButton->setLabel("main/account/atlas/sign_out"_i18n);
+        // ApplicationState::accountState->setLoggedIn()
+        // if (!signedIn) {
+        //     signButton->setLabel("main/account/atlas/sign_in"_i18n);
+        // } else {
+        //     signButton->setLabel("main/account/atlas/sign_out"_i18n);
+        // }
+
+        // auto* frame = new brls::AppletFrame(true, false);
+        // // frame->
+        // auto* content = new brls::List();
+        // content->addView(new brls::ListItem("Test"));
+        // // frame->setContentView(content);
+        // auto* appletFrame = new brls::TabFrame();
+        // appletFrame->addTab("Login", new brls::ListItem("Hello"));
+        // appletFrame->addTab("Sign up", new brls::ListItem("Hello"));
+        // appletFrame->setActionAvailable(brls::Key::PLUS, false);
+        // brls::PopupFrame::open("Authenticate", appletFrame, "Authenticate with Atlas storage servers", "This must be done in order to use this app");
     }
 
     void AccountTab::addProfileSelector() {
         // Table so we can put the icon next to the button
         auto table = new brls::BoxLayout(brls::BoxLayoutOrientation::HORIZONTAL);
-        table->setHeight(120); // Called so anything below will have spacing
+        table->setHeight(170); // Called so anything below will have spacing
 
         // Icon table needed for proper spacing and container for Image
         auto iconTable = new brls::BoxLayout(brls::BoxLayoutOrientation::VERTICAL);
@@ -48,5 +77,22 @@ namespace ui {
         table->addView(iconTable);
 
         this->addView(table);
+    }
+
+    void AccountTab::addAtlasAccountData() {
+        // auto* bar = new ui::components::Bar(0.4, brls::Application::getTheme()->textColor);
+        // this->addView(bar);
+
+        this->addView(new brls::Header("main/account/atlas/header"_i18n));
+
+        this->signButton = new brls::ListItem("main/account/atlas/sign_in"_i18n);
+
+        auto* state = this->StateListener<AccountState>::getState();
+        signButton->registerAction("brls/hints/select"_i18n, brls::Key::A, [state] () {
+            state->setLoggedIn(!state->loggedIn);
+            return true;
+        });
+
+        this->addView(signButton);
     }
 }

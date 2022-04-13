@@ -54,7 +54,8 @@
         "istream": "cpp",
         "numeric": "cpp",
         "sstream": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "iostream": "cpp"
     },
     "workbench.colorTheme": "Syntax Material Dark Level 1 (beta)"
 }
