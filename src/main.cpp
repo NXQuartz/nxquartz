@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <borealis.hpp>
 #include <string>
+#include <iostream>
 
 #include "ui/about_tab.hpp"
 #include "ui/account_tab.hpp"
@@ -15,6 +16,15 @@ namespace i18n = brls::i18n;
 using namespace i18n::literals;
 
 int main(int argc, char* argv[]) {
+    #ifdef DEBUG_BUILD
+        // Initialize sockets
+        socketInitializeDefault();
+        // Redirect stdout and stderr over the network to nxlink
+        nxlinkStdio();
+    #endif
+
+    std::cout << "Initializing quartz" << std::endl;
+
     brls::Logger::setLogLevel(brls::LogLevel::DBG);
     i18n::loadTranslations();
 
@@ -44,6 +54,10 @@ int main(int argc, char* argv[]) {
     while (brls::Application::mainLoop());
 
     account::exitAccountService();
+
+    #ifdef DEBUG_BUILD
+        socketExit();
+    #endif
 
     return EXIT_SUCCESS;
 }

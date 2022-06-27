@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-
 #include "state/state.hpp"
 
 class AccountState : public State<AccountState> {
