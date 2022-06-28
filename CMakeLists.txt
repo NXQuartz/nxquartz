@@ -1,7 +1,7 @@
+cmake_minimum_required(VERSION 3.21)
+
 ## Declare project
 project(nxquartz)
-
-cmake_minimum_required(VERSION 3.21)
 
 # We set the C standard to 11.
 set(CMAKE_C_STANDARD 17)
@@ -54,6 +54,7 @@ file(GLOB_RECURSE SRC
 )
 
 add_executable(nxquartz ${SRC} ${BOREALIS_SRC})
+target_compile_definitions(nxquartz PRIVATE PROJECT_NAME="${PROJECT_NAME}")
 
 # Borealis and Quartz include directories
 target_include_directories(nxquartz PUBLIC
@@ -68,7 +69,7 @@ target_include_directories(nxquartz PUBLIC
 include_directories("${PORTLIBS}/include")
 include_directories("${LIBNX}/include")
 
-target_link_libraries(nxquartz 
+target_link_libraries(nxquartz
 	switch::libnx
 	-L${LIBNX}/lib
 	-L${PORTLIBS}/lib
