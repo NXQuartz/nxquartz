@@ -9,9 +9,10 @@
 
 #include "ui/about_tab.hpp"
 #include "ui/account_tab.hpp"
-#include "account.hpp"
+#include "profile.hpp"
 
 #include "state/app_state.hpp"
+#include "state/profile_state.hpp"
 
 #include "logger.hpp"
 
@@ -31,10 +32,10 @@ int main(int argc, char* argv[]) {
     brls::Logger::setLogLevel(brls::LogLevel::DBG);
     i18n::loadTranslations();
 
-    account::initAccountService();
+    ProfileService profileService;
 
     // Application state passed and shared between UI/Core
-    AppState appState;
+    AppState appState(&profileService);
 
     // Init the app and i18n
     if (!brls::Application::init("main/name"_i18n)) {
@@ -47,7 +48,7 @@ int main(int argc, char* argv[]) {
     rootFrame->setTitle("main/name"_i18n);
     rootFrame->setIcon(BOREALIS_ASSET("img/quartz_256.png"));
 
-    rootFrame->addTab("main/tabs/account"_i18n, new ui::AccountTab(&appState.accountState));
+    rootFrame->addTab("main/tabs/account"_i18n, new ui::AccountTab(&appState.accountState, &appState.profileState));
     rootFrame->addSeparator();
     rootFrame->addTab("main/tabs/about"_i18n, new ui::AboutTab());
 
@@ -55,8 +56,6 @@ int main(int argc, char* argv[]) {
 
     // Run the app
     while (brls::Application::mainLoop());
-
-    account::exitAccountService();
 
     #ifndef NDEBUG
         socketExit();

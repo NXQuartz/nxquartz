@@ -5,13 +5,18 @@
 #include "state/app_state.hpp"
 
 namespace ui {
-    class AccountTab : public brls::List, public StateListener<AccountState> {
+    class AccountTab : public brls::List, public StateListener<AccountState>, public StateListener<ProfileState> {
+    public:
+        AccountTab(AccountState* accountState, ProfileState* profileState);
+        void onStateUpdate(AccountState* state) override;
+        void onStateUpdate(ProfileState* state) override;
+    private:
         void addProfileSelector();
         void addAtlasAccountData();
 
         brls::ListItem* signButton;
-    public:
-        AccountTab(AccountState* state);
-        void onStateUpdate(const AccountState* state) override;
+
+        brls::Image* profileIcon;
+        brls::ListItem* profileName;
     };
 }

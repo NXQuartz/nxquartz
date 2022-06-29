@@ -1,17 +1,18 @@
 #include "ui/account_tab.hpp"
 #include "ui/components/bar.hpp"
-#include "account.hpp"
+#include "profile.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;
 
 namespace ui {
-    AccountTab::AccountTab(AccountState* state) : StateListener(state) {
+    AccountTab::AccountTab(AccountState* accountState, ProfileState* profileState) 
+        : StateListener<AccountState>(accountState), StateListener<ProfileState>(profileState) {
         addProfileSelector();
         addAtlasAccountData();
     }
 
-    void AccountTab::onStateUpdate(const AccountState* state) {
+    void AccountTab::onStateUpdate(AccountState* state) {
         if (!state->loggedIn) {
             signButton->setLabel("main/account/atlas/sign_in"_i18n);
         } else {
@@ -19,7 +20,8 @@ namespace ui {
         }
 
         // signButton->setLabel("main/account/atlas/sign_out"_i18n);
-        // ApplicationState::accountState->setLoggedIn()
+        // // ApplicationState::accountState->setLoggedIn();
+        // AccountState::setLoggedIn(true);
         // if (!signedIn) {
         //     signButton->setLabel("main/account/atlas/sign_in"_i18n);
         // } else {
@@ -38,6 +40,13 @@ namespace ui {
         // brls::PopupFrame::open("Authenticate", appletFrame, "Authenticate with Atlas storage servers", "This must be done in order to use this app");
     }
 
+    void AccountTab::onStateUpdate(ProfileState* state) {
+        // profileState->icon.first;
+        auto profile = state->getCurrentProfile();
+        profileIcon->setImage(profile->icon.first, profile->icon.second);
+        profileName->setValue(profile->name);
+    }
+
     void AccountTab::addProfileSelector() {
         // Table so we can put the icon next to the button
         auto table = new brls::BoxLayout(brls::BoxLayoutOrientation::HORIZONTAL);
@@ -47,33 +56,33 @@ namespace ui {
         auto iconTable = new brls::BoxLayout(brls::BoxLayoutOrientation::VERTICAL);
         iconTable->setWidth(125);
 
-        auto icon = account::SwitchAccount::getCurrentAccount()->icon; // Actual user icon
-        auto* profileIcon = new brls::Image(icon.first, icon.second);
+        auto& profileState = *StateListener<ProfileState>::getState();
+        auto profile = profileState.getCurrentProfile();
+
+        profileIcon = new brls::Image(profile->icon.first, profile->icon.second);
         profileIcon->setScaleType(brls::ImageScaleType::FIT);
         profileIcon->setHeight(70);
         profileIcon->setWidth(70);
         iconTable->addView(profileIcon);
 
         // Button to select profile
-        auto* selectProfile = new brls::ListItem(
+        profileName = new brls::ListItem(
             "main/account/select_profile"_i18n,
             "main/account/select_profile_tooltip"_i18n
         );
 
-        selectProfile->setValue(account::SwitchAccount::getCurrentAccount()->name);
-        selectProfile->registerAction("brls/hints/select"_i18n, brls::Key::A, [profileIcon, selectProfile] () {
-            if (auto account = account::SwitchAccount::selectAccount(); account != nullptr) {
-                profileIcon->setImage(account->icon.first, account->icon.second);
-                selectProfile->setValue(account->name);
-            }
+        profileName->setValue(profile->name);
+        profileName->registerAction("brls/hints/select"_i18n, brls::Key::A, [&profileState] () {
+            if (auto profile = profileState->selectAccount(); profile != nullptr)
+                profileState.setCurrentProfile(profile);
 
             return true;
         });
 
         // This is about the right width in order to make the icon + selector width the width of a normal ListItem
-        selectProfile->setWidth(625);
+        profileName->setWidth(625);
 
-        table->addView(selectProfile);
+        table->addView(profileName);
         table->addView(iconTable);
 
         this->addView(table);
@@ -87,7 +96,7 @@ namespace ui {
 
         this->signButton = new brls::ListItem("main/account/atlas/sign_in"_i18n);
 
-        auto* state = this->StateListener<AccountState>::getState();
+        auto* state = StateListener<AccountState>::getState();
         signButton->registerAction("brls/hints/select"_i18n, brls::Key::A, [state] () {
             state->setLoggedIn(!state->loggedIn);
             return true;

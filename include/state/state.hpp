@@ -45,5 +45,5 @@ public:
         return reinterpret_cast<T*>(state);
     }
 
-    virtual void onStateUpdate(const T* state) = 0;
+    virtual void onStateUpdate(T* state) = 0;
 };
