@@ -49,25 +49,25 @@ public:
     ~ProfileService();
 
     /**
-   * @brief Gets an account by their Uid.
-   *
-   * @param uid the uid of the user
-   * @return a SwitchProfile* or nullptr if the user was not found
-   */
+     * @brief Gets an account by their Uid.
+     *
+     * @param uid the uid of the user
+     * @return a SwitchProfile* or nullptr if the user was not found
+     */
     SwitchProfile* fromId(AccountUid uid);
 
     /**
-   * @brief Opens selection dialogue on the switch for user to select.
-   *
-   * @return SwitchProfile* or nullptr if cancelled
-   */
+     * @brief Opens selection dialogue on the switch for user to select.
+     *
+     * @return SwitchProfile* or nullptr if cancelled
+     */
     SwitchProfile* selectAccount();
 
     /**
-   * @brief Get the registered user accounts
-   *
-   * @return all user accounts
-   */
+     * @brief Get the registered user accounts
+     *
+     * @return all user accounts
+     */
     const std::vector<SwitchProfile*> getAll();
 
 private:

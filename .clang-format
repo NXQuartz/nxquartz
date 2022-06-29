@@ -10,3 +10,4 @@ BreakConstructorInitializers: AfterColon
 BraceWrapping:
   AfterEnum: false
   SplitEmptyFunction: false
+AllowShortEnumsOnASingleLine: false

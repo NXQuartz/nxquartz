@@ -52,8 +52,8 @@ SwitchProfile* ProfileService::fromId(AccountUid uid) {
 
 SwitchProfile* ProfileService::selectAccount() {
     // Account select applet might still be open after call.
-    // If applet still open atmosphere will crash so we wait 1 second to make sure
-    // it closed.
+    // If applet still open atmosphere will crash so we wait 1 second to make
+    // sure it closed.
     using namespace std::chrono;
     if (duration_cast<milliseconds>(steady_clock::now() - lastSelected).count() < 1000)
         std::this_thread::sleep_for(seconds(1));

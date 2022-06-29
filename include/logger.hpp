@@ -7,10 +7,12 @@
 #include <ctime>
 #include <string>
 
-enum class LogLevel { ERROR = 0,
+enum class LogLevel {
+    ERROR = 0,
     WARNING,
     INFO,
-    DEBUG };
+    DEBUG
+};
 
 class Logger {
 public:
