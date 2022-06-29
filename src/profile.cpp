@@ -1,13 +1,14 @@
 #include "profile.hpp"
 
-#include <unordered_map>
 #include <chrono>
 #include <thread>
+#include <unordered_map>
 
 #include "util.hpp"
 
 ProfileService::ProfileService() {
-    assertResult(accountInitialize(AccountServiceType_Administrator), "initialize account service");
+    assertResult(accountInitialize(AccountServiceType_Administrator),
+        "initialize account service");
     Logger::info("Initialized profile service.");
 }
 
@@ -17,7 +18,7 @@ ProfileService::~ProfileService() {
 
     accountMap.clear();
     accountExit();
-    
+
     Logger::info("Account service has been shut down.");
 }
 
@@ -33,18 +34,13 @@ SwitchProfile* ProfileService::fromId(AccountUid uid) {
     // Lookup and cache the users details
     AccountProfile profile;
     AccountProfileBase profileBase;
-    if (R_SUCCEEDED(accountGetProfile(&profile, uid)) && 
-        R_SUCCEEDED(accountProfileGet(&profile, nullptr, &profileBase)) &&
-        R_SUCCEEDED(accountProfileGetImageSize(&profile, &imageSize)) && (iconBuffer = (u8*)malloc(imageSize)) != NULL &&
-        R_SUCCEEDED(accountProfileLoadImage(&profile, iconBuffer, imageSize, &realSize))) {
+    if (R_SUCCEEDED(accountGetProfile(&profile, uid)) && R_SUCCEEDED(accountProfileGet(&profile, nullptr, &profileBase)) && R_SUCCEEDED(accountProfileGetImageSize(&profile, &imageSize)) && (iconBuffer = (u8*)malloc(imageSize)) != NULL && R_SUCCEEDED(accountProfileLoadImage(&profile, iconBuffer, imageSize, &realSize))) {
         auto username = std::string(profileBase.nickname, 0x20);
         accountProfileClose(&profile);
 
-        auto account = new SwitchProfile {
-            .id = uid,
-            .name = username,
-            .icon = std::make_pair(iconBuffer, imageSize)
-        };
+        auto account = new SwitchProfile { .id = uid,
+            .name                              = username,
+            .icon                              = std::make_pair(iconBuffer, imageSize) };
 
         accountMap[uid] = account;
 
@@ -56,7 +52,8 @@ SwitchProfile* ProfileService::fromId(AccountUid uid) {
 
 SwitchProfile* ProfileService::selectAccount() {
     // Account select applet might still be open after call.
-    // If applet still open atmosphere will crash so we wait 1 second to make sure it closed.
+    // If applet still open atmosphere will crash so we wait 1 second to make sure
+    // it closed.
     using namespace std::chrono;
     if (duration_cast<milliseconds>(steady_clock::now() - lastSelected).count() < 1000)
         std::this_thread::sleep_for(seconds(1));
@@ -84,7 +81,7 @@ const std::vector<SwitchProfile*> ProfileService::getAll() {
             users.push_back(fromId(uids[i]));
         }
     }
-    
+
     delete[] uids;
     return users;
 }
