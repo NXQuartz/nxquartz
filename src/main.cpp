@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     nxlinkStdio();
 #endif
 
-    Logger::info("{}", "Initializing Quartz");
+    Logger::info("Initializing Quartz");
 
     brls::Logger::setLogLevel(brls::LogLevel::DBG);
     i18n::loadTranslations();
@@ -48,11 +48,12 @@ int main(int argc, char* argv[]) {
     rootFrame->setTitle("main/name"_i18n);
     rootFrame->setIcon(BOREALIS_ASSET("img/quartz_256.png"));
 
-    rootFrame->addTab(
-        "main/tabs/account"_i18n,
-        new ui::AccountTab(&appState.accountState, &appState.profileState));
+    ui::AccountTab accountTab(&appState.accountState, &appState.profileState);
+    rootFrame->addTab("main/tabs/account"_i18n, &accountTab);
     rootFrame->addSeparator();
-    rootFrame->addTab("main/tabs/about"_i18n, new ui::AboutTab());
+
+    ui::AboutTab aboutTab;
+    rootFrame->addTab("main/tabs/about"_i18n, &aboutTab);
 
     brls::Application::pushView(rootFrame);
 
