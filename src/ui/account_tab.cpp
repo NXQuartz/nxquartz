@@ -6,15 +6,15 @@ namespace i18n = brls::i18n;
 using namespace i18n::literals;
 
 namespace ui {
-AccountTab::AccountTab(AccountState* accountState, ProfileState* profileState)
+AccountTab::AccountTab(AccountState& accountState, ProfileState& profileState)
     : State<AccountState>::Listener(accountState),
       State<ProfileState>::Listener(profileState) {
     addProfileSelector();
     addAtlasAccountData();
 }
 
-void AccountTab::onStateUpdate(AccountState* state) {
-    if (!state->loggedIn) {
+void AccountTab::onStateUpdate(AccountState& state) {
+    if (!state.loggedIn) {
         signButton->setLabel("main/account/atlas/sign_in"_i18n);
     } else {
         signButton->setLabel("main/account/atlas/sign_out"_i18n);
@@ -42,9 +42,9 @@ void AccountTab::onStateUpdate(AccountState* state) {
     // Atlas storage servers", "This must be done in order to use this app");
 }
 
-void AccountTab::onStateUpdate(ProfileState* state) {
+void AccountTab::onStateUpdate(ProfileState& state) {
     // profileState->icon.first;
-    auto profile = state->getCurrentProfile();
+    auto profile = state.getCurrentProfile();
     profileIcon->setImage(profile->icon.first, profile->icon.second);
     profileName->setValue(profile->name);
 }
@@ -58,7 +58,7 @@ void AccountTab::addProfileSelector() {
     auto iconTable = new brls::BoxLayout(brls::BoxLayoutOrientation::VERTICAL);
     iconTable->setWidth(125);
 
-    auto& profileState = *State<ProfileState>::Listener::getState();
+    auto& profileState = State<ProfileState>::Listener::getState();
     auto profile       = profileState.getCurrentProfile();
 
     profileIcon = new brls::Image(profile->icon.first, profile->icon.second);
@@ -98,9 +98,9 @@ void AccountTab::addAtlasAccountData() {
 
     this->signButton = new brls::ListItem("main/account/atlas/sign_in"_i18n);
 
-    auto* state = State<AccountState>::Listener::getState();
-    signButton->registerAction("brls/hints/select"_i18n, brls::Key::A, [state]() {
-        state->setLoggedIn(!state->loggedIn);
+    AccountState& state = State<AccountState>::Listener::getState();
+    signButton->registerAction("brls/hints/select"_i18n, brls::Key::A, [&state]() {
+        state.setLoggedIn(!state.loggedIn);
         return true;
     });
 

@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     rootFrame->setTitle("main/name"_i18n);
     rootFrame->setIcon(BOREALIS_ASSET("img/quartz_256.png"));
 
-    ui::AccountTab accountTab(&appState.accountState, &appState.profileState);
+    ui::AccountTab accountTab(appState.accountState, appState.profileState);
     rootFrame->addTab("main/tabs/account"_i18n, &accountTab);
     rootFrame->addSeparator();
 

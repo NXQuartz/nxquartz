@@ -9,9 +9,9 @@ class AccountTab : public brls::List,
                    State<AccountState>::Listener,
                    State<ProfileState>::Listener {
 public:
-    AccountTab(AccountState* accountState, ProfileState* profileState);
-    void onStateUpdate(AccountState* state) override;
-    void onStateUpdate(ProfileState* state) override;
+    AccountTab(AccountState& accountState, ProfileState& profileState);
+    void onStateUpdate(AccountState& state) override;
+    void onStateUpdate(ProfileState& state) override;
 
 private:
     void addProfileSelector();
