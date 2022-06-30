@@ -27,6 +27,7 @@ public:
     ProfileService& operator*() { return *profileService; }
 
 private:
-    SwitchProfile* currentProfile;
+    // This will be set on first query
+    SwitchProfile* currentProfile = nullptr;
     ProfileService* profileService;
 };
