@@ -6,8 +6,8 @@
 
 namespace ui {
 class AccountTab : public brls::List,
-                   public StateListener<AccountState>,
-                   public StateListener<ProfileState> {
+                   State<AccountState>::Listener,
+                   State<ProfileState>::Listener {
 public:
     AccountTab(AccountState* accountState, ProfileState* profileState);
     void onStateUpdate(AccountState* state) override;

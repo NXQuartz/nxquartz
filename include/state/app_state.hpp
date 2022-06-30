@@ -8,8 +8,7 @@
  */
 class AppState {
 public:
-    AppState(ProfileService* profileService) :
-        profileState(profileService) { }
+    AppState(ProfileService* profileService) : profileState(profileService) { }
 
     AccountState accountState;
     ProfileState profileState;

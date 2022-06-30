@@ -5,8 +5,7 @@
 
 class AccountState : public State<AccountState> {
 public:
-    AccountState() :
-        State<AccountState>() { }
+    AccountState() : State<AccountState>() { }
 
     bool loggedIn = false;
 

@@ -1,8 +1,8 @@
 #include "ui/components/bar.hpp"
 
 namespace ui::components {
-Bar::Bar(double progress, NVGcolor color) :
-    progress(progress), color(color) {
+Bar::Bar(double progress, NVGcolor color)
+    : progress(progress), color(color) {
     this->setHeight(20);
 }
 

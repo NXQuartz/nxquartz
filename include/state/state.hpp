@@ -2,50 +2,45 @@
 
 #include "util.hpp"
 
-// Forward declare because templates
-template <class T>
-class StateListener;
-
 /**
- * @brief Reactive state. StateHandlers will be registered as callbacks to state
+ * @brief Reactive state. Listeners will be registered as callbacks to state
  * changes on T
  *
  * @tparam T state type (inherit on T, crtp model)
  */
 template <class T>
 class State {
+public:
+    /**
+     * @brief Listen to state changes triggered by State<T>
+     *
+     * @tparam T state type
+     */
+    class Listener {
+        State<T>* state;
+
+    public:
+        Listener(State<T>* state) : state(state) {
+            state->listeners.push_back(this);
+        }
+
+        virtual ~Listener() {
+            erase_where(state->listeners,
+                [this](auto* instance) { return this == instance; });
+        }
+
+        T* getState() { return reinterpret_cast<T*>(state); }
+
+        virtual void onStateUpdate(T* state) = 0;
+    };
+
 protected:
     void dispatchUpdate() {
         for (auto* listener : this->listeners)
-            listener->onStateUpdate(reinterpret_cast<T*>(this));
+            listener->onStateUpdate(static_cast<T*>(this));
     }
 
 private:
-    std::vector<StateListener<T>*> listeners;
-    friend StateListener<T>;
-};
-
-/**
- * @brief Listen to state changes triggered by State<T>
- *
- * @tparam T state type
- */
-template <class T>
-class StateListener {
-    State<T>* state;
-
-public:
-    StateListener(State<T>* state) :
-        state(state) {
-        state->listeners.push_back(this);
-    }
-
-    ~StateListener() {
-        erase_where(state->listeners,
-            [this](auto* instance) { return this == instance; });
-    }
-
-    T* getState() { return reinterpret_cast<T*>(state); }
-
-    virtual void onStateUpdate(T* state) = 0;
+    std::vector<State<T>::Listener*> listeners;
+    friend State<T>::Listener;
 };

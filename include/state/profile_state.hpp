@@ -5,8 +5,9 @@
 
 class ProfileState : public State<ProfileState> {
 public:
-    ProfileState(ProfileService* profileService) :
-        State<ProfileState>(), profileService(profileService) { }
+    ProfileState(ProfileService* profileService)
+        : State<ProfileState>(),
+          profileService(profileService) { }
 
     /**
      * @brief Set the current logged in AccountProfile

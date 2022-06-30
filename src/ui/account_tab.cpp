@@ -6,9 +6,9 @@ namespace i18n = brls::i18n;
 using namespace i18n::literals;
 
 namespace ui {
-AccountTab::AccountTab(AccountState* accountState, ProfileState* profileState) :
-    StateListener<AccountState>(accountState), StateListener<ProfileState>(
-                                                   profileState) {
+AccountTab::AccountTab(AccountState* accountState, ProfileState* profileState)
+    : State<AccountState>::Listener(accountState),
+      State<ProfileState>::Listener(profileState) {
     addProfileSelector();
     addAtlasAccountData();
 }
@@ -58,7 +58,7 @@ void AccountTab::addProfileSelector() {
     auto iconTable = new brls::BoxLayout(brls::BoxLayoutOrientation::VERTICAL);
     iconTable->setWidth(125);
 
-    auto& profileState = *StateListener<ProfileState>::getState();
+    auto& profileState = *State<ProfileState>::Listener::getState();
     auto profile       = profileState.getCurrentProfile();
 
     profileIcon = new brls::Image(profile->icon.first, profile->icon.second);
@@ -98,7 +98,7 @@ void AccountTab::addAtlasAccountData() {
 
     this->signButton = new brls::ListItem("main/account/atlas/sign_in"_i18n);
 
-    auto* state = StateListener<AccountState>::getState();
+    auto* state = State<AccountState>::Listener::getState();
     signButton->registerAction("brls/hints/select"_i18n, brls::Key::A, [state]() {
         state->setLoggedIn(!state->loggedIn);
         return true;

@@ -6,8 +6,9 @@ IndentCaseLabels: true
 PointerAlignment: Left
 SortIncludes: true
 BreakBeforeBraces: Custom
-BreakConstructorInitializers: AfterColon
 BraceWrapping:
   AfterEnum: false
   SplitEmptyFunction: false
 AllowShortEnumsOnASingleLine: false
+PackConstructorInitializers: BinPack
+BreakConstructorInitializers: BeforeColon
