@@ -282,10 +282,12 @@ function(add_nro_target target)
     # Build the NRO file.
     if(NOT NO_NACP)
         __generate_nacp(${target})
+        set(NACP_FILE ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nacp)
+
         set(__NRO_COMMAND ${elf2nro}
             $<TARGET_FILE:${target}>
             ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nro
-            --nacp=${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nacp
+            --nacp=${NACP_FILE}
             ${romfs}
             ${icon}
         )
@@ -303,7 +305,7 @@ function(add_nro_target target)
     add_custom_command(
         OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.nro
         COMMAND ${__NRO_COMMAND}
-        DEPENDS ${target}
+        DEPENDS ${target} ${NACP_FILE}
         VERBATIM
     )
 
