@@ -41,5 +41,4 @@ out
 Quartz.lst
 
 # VSCode
-.vscode/*.log
-.vscode/settings.json
+.vscode

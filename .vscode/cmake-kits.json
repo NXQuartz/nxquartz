@@ -1,6 +1,0 @@
-[
-	{
-		"name": "devkitPro",
-		"toolchainFile": "DevkitA64Libnx.cmake"
-	}
-]
