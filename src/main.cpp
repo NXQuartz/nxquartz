@@ -7,14 +7,14 @@
 #include <string>
 #include <sys/file.h>
 
+#include "logger.hpp"
 #include "profile.hpp"
-#include "ui/about_tab.hpp"
-#include "ui/account_tab.hpp"
 
 #include "state/app_state.hpp"
 #include "state/profile_state.hpp"
 
-#include "logger.hpp"
+#include "ui/about_tab.hpp"
+#include "ui/account_tab.hpp"
 
 namespace i18n = brls::i18n;
 using namespace i18n::literals;

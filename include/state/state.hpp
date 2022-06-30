@@ -6,7 +6,7 @@
  * @brief Reactive state. Listeners will be registered as callbacks to state
  * changes on T
  *
- * @tparam T state type (inherit on T, crtp model)
+ * @tparam T state type (inherit on T, crtp pattern)
  */
 template <class T>
 class State {
@@ -17,10 +17,10 @@ public:
      * @tparam T state type
      */
     class Listener {
-        State<T>* state;
+        T* state;
 
     public:
-        Listener(State<T>* state) : state(state) {
+        Listener(T* state) : state(state) {
             state->listeners.push_back(this);
         }
 
@@ -29,7 +29,7 @@ public:
                 [this](auto* instance) { return this == instance; });
         }
 
-        T* getState() { return reinterpret_cast<T*>(state); }
+        T* getState() { return state; }
 
         virtual void onStateUpdate(T* state) = 0;
     };
@@ -41,6 +41,6 @@ protected:
     }
 
 private:
-    std::vector<State<T>::Listener*> listeners;
-    friend State<T>::Listener;
+    std::vector<Listener*> listeners;
+    friend Listener;
 };
