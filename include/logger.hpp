@@ -16,25 +16,27 @@ enum class LogLevel {
 
 class Logger {
 public:
-    static void setLogLevel(LogLevel logLevel);
+    static void setLogLevel(LogLevel logLevel) {
+        Logger::logLevel = logLevel;
+    }
 
     template <typename... Args>
-    inline static void error(std::string format, Args&&... args) {
+    static void error(std::string format, Args&&... args) {
         Logger::log(LogLevel::ERROR, "ERROR", format, args...);
     }
 
     template <typename... Args>
-    inline static void warning(std::string format, Args&&... args) {
+    static void warning(std::string format, Args&&... args) {
         Logger::log(LogLevel::WARNING, "WARNING", format, args...);
     }
 
     template <typename... Args>
-    inline static void info(std::string format, Args&&... args) {
+    static void info(std::string format, Args&&... args) {
         Logger::log(LogLevel::INFO, "INFO", format, args...);
     }
 
     template <typename... Args>
-    inline static void debug(std::string format, Args&&... args) {
+    static void debug(std::string format, Args&&... args) {
         Logger::log(LogLevel::DEBUG, "DEBUG", format, args...);
     }
 
@@ -42,7 +44,7 @@ private:
     inline static LogLevel logLevel = LogLevel::INFO;
 
     template <typename... Args>
-    inline static void log(LogLevel logLevel, std::string prefix,
+    static void log(LogLevel logLevel, std::string prefix,
         std::string format, Args&&... args) {
         if (Logger::logLevel < logLevel)
             return;
