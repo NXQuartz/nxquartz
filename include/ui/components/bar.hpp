@@ -5,8 +5,9 @@
 namespace ui::components {
 class Bar : public brls::View {
 protected:
-    NVGcolor color;
     double progress = 0;
+    NVGcolor color;
+
     void layout(NVGcontext* vg, brls::Style* style,
         brls::FontStash* stash) override;
 

@@ -1,0 +1,8 @@
+{
+	"cmake.generator": "Unix Makefiles",
+	"editor.formatOnSave": true,
+	"clangd.arguments": [
+		"--query-driver=${env:DEVKITPRO}/devkitA64/bin/aarch64-none-elf-g++",
+		"--compile-commands-dir=build"
+	]
+}
