@@ -38,9 +38,11 @@ SwitchProfile* ProfileService::fromId(AccountUid uid) {
         auto username = std::string(profileBase.nickname, 0x20);
         accountProfileClose(&profile);
 
-        auto account = new SwitchProfile { .id = uid,
-            .name                              = username,
-            .icon                              = std::make_pair(iconBuffer, imageSize) };
+        auto account = new SwitchProfile {
+            .id   = uid,
+            .name = username,
+            .icon = std::make_pair(iconBuffer, imageSize)
+        };
 
         accountMap[uid] = account;
 
